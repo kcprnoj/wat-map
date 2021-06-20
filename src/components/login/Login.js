@@ -1,11 +1,11 @@
-import React, { Component } from "react";
-import { Row, FormGroup, FormControl, Button, HelpBlock } from 'react-bootstrap';
-import { isEmail, isEmpty, isLength, isContainWhiteSpace } from './validator';
+import React, {Component} from "react";
+import {Row, FormGroup, FormControl, Button, HelpBlock} from 'react-bootstrap';
+import {isEmail, isEmpty, isLength, isContainWhiteSpace} from './validator';
 import './login.css'
 
 class Login extends Component {
 
-    componentDidMount(){
+    componentDidMount() {
         document.body.style.background = "royalblue";
     }
 
@@ -25,7 +25,7 @@ class Login extends Component {
         const value = target.value;
         const name = target.name;
 
-        let { formData } = this.state;
+        let {formData} = this.state;
         formData[name] = value;
 
         this.setState({
@@ -36,7 +36,7 @@ class Login extends Component {
     validateLoginForm = (e) => {
 
         let errors = {};
-        const { formData } = this.state;
+        const {formData} = this.state;
 
         if (isEmpty(formData.email)) {
             errors.email = "Email can't be blank";
@@ -46,9 +46,9 @@ class Login extends Component {
 
         if (isEmpty(formData.password)) {
             errors.password = "Password can't be blank";
-        }  else if (isContainWhiteSpace(formData.password)) {
+        } else if (isContainWhiteSpace(formData.password)) {
             errors.password = "Password should not contain white spaces";
-        } else if (!isLength(formData.password, { gte: 6, lte: 16, trim: true })) {
+        } else if (!isLength(formData.password, {gte: 6, lte: 16, trim: true})) {
             errors.password = "Password's length must between 6 to 16";
         }
 
@@ -65,7 +65,7 @@ class Login extends Component {
 
         let errors = this.validateLoginForm();
 
-        if(errors === true){
+        if (errors === true) {
             alert("You are successfully signed in...");
             window.location.reload()
         } else {
@@ -78,30 +78,53 @@ class Login extends Component {
 
     render() {
 
-        const { errors, formSubmitted } = this.state;
+        const {errors, formSubmitted} = this.state;
 
         return (
-            <div className="Login">
-                <Row>
-                    <form onSubmit={this.login}>
-                        <h1 className="title">Login</h1>
-                        <FormGroup controlId="email" validationState={ formSubmitted ? (errors.email ? 'error' : 'success') : null }>
-                            <FormControl type="text" name="email" placeholder="Enter your email" onChange={this.handleInputChange} />
-                        { errors.email &&
-                            <HelpBlock>{errors.email}</HelpBlock>
-                        }
-                        </FormGroup>
-                        <FormGroup controlId="password" validationState={ formSubmitted ? (errors.password ? 'error' : 'success') : null }>
-                            <FormControl type="password" name="password" placeholder="Enter your password" onChange={this.handleInputChange} />
-                        { errors.password &&
-                            <HelpBlock>{errors.password}</HelpBlock>
-                        }
-                        </FormGroup>
-                        <Button type="submit" bsStyle="primary">Sign-In</Button>
-                    </form>
-                </Row>
-            </div>
-        )
+            < div
+        className = "Login" >
+            < Row >
+            < form
+        onSubmit = {this.login} >
+            < h1
+        className = "title" > Login < /h1>
+            < FormGroup
+        controlId = "email"
+        validationState = {formSubmitted ? (errors.email ? 'error' : 'success') : null} >
+            < FormControl
+        type = "text"
+        name = "email"
+        placeholder = "Enter your email"
+        onChange = {this.handleInputChange}
+        />
+        {
+            errors.email &&
+            < HelpBlock > {errors.email} < /HelpBlock>
+        }
+    <
+        /FormGroup>
+        < FormGroup
+        controlId = "password"
+        validationState = {formSubmitted ? (errors.password ? 'error' : 'success') : null} >
+            < FormControl
+        type = "password"
+        name = "password"
+        placeholder = "Enter your password"
+        onChange = {this.handleInputChange}
+        />
+        {
+            errors.password &&
+            < HelpBlock > {errors.password} < /HelpBlock>
+        }
+    <
+        /FormGroup>
+        < Button
+        type = "submit"
+        bsStyle = "primary" > Sign - In < /Button>
+            < /form>
+            < /Row>
+            < /div>
+    )
     }
 }
 
