@@ -1,0 +1,20 @@
+
+.Login{
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    position: absolute;
+    width: 400px;
+    border-radius:  10px;
+    text-align:  center;
+    background: linear-gradient(120deg, #eee,white);
+}
+
+.title{
+    padding:  0 0 20px 0;
+    border-bottom: 1px solid silver;
+}
+
+.email{
+    background-color: black;
+}

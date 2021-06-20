@@ -1,0 +1,51 @@
+diff --git a/node_modules/react-leaflet-search/lib/search-control.js b/node_modules/react-leaflet-search/lib/search-control.js
+index b32ceb4..df77bd4 100644
+--- a/node_modules/react-leaflet-search/lib/search-control.js
++++ b/node_modules/react-leaflet-search/lib/search-control.js
+@@ -68,7 +68,7 @@ class SearchControl extends React.Component {
+                     this.showInfo(this.responseCache[this.input.current.value].info);
+                 }
+                 else {
+-                    if (this.input.current.value.length >= 3) {
++                    if (this.input.current.value.length >= 1) {
+                         this.showInfo("Searching...");
+                         const searchValue = this.input.current.value;
+                         const response = yield this.provider.search(searchValue);
+@@ -161,12 +161,6 @@ class SearchControl extends React.Component {
+                     });
+             }
+         }
+-        else {
+-            if (this.input.current.value.length < 3) {
+-                const response = 'Please enter a valid lat,lng starting with ":" or minimum 3 character to search';
+-                this.showInfo(response);
+-            }
+-        }
+     }
+     hideInfo() {
+         this.lastInfo = this.SearchResponseInfo;
+diff --git a/node_modules/react-leaflet-search/src/search-control.tsx b/node_modules/react-leaflet-search/src/search-control.tsx
+index 9d35ea8..908102c 100644
+--- a/node_modules/react-leaflet-search/src/search-control.tsx
++++ b/node_modules/react-leaflet-search/src/search-control.tsx
+@@ -155,7 +155,7 @@ class SearchControl extends React.Component<SearchControlProps, SearchControlSta
+             if (Object.prototype.hasOwnProperty.call(this.responseCache, this.input.current!.value)) {
+                 this.showInfo(this.responseCache[this.input.current!.value].info);
+             } else {
+-                if (this.input.current!.value.length >= 3) {
++                if (this.input.current!.value.length >= 1) {
+                     this.showInfo("Searching...");
+                     const searchValue = this.input.current!.value;
+                     const response = await this.provider.search(searchValue);
+@@ -199,11 +199,6 @@ class SearchControl extends React.Component<SearchControlProps, SearchControlSta
+                         },
+                     });
+             }
+-        } else {
+-            if (this.input.current!.value.length < 3) {
+-                const response = 'Please enter a valid lat,lng starting with ":" or minimum 3 character to search';
+-                this.showInfo(response);
+-            }
+         }
+     }
+ 
