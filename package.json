@@ -15,7 +15,7 @@
     "react-leaflet": "^2.8.0",
     "react-leaflet-search": "^2.0.1",
     "react-router-dom": "^5.2.0",
-    "react-scripts": "^1.1.5"
+    "react-scripts": "2.1.8"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -27,8 +27,7 @@
     "extends": "react-app"
   },
   "browserslist": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ]
+    ">0.2%",
+    "not op_mini all"
+  ]
 }
