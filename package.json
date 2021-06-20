@@ -17,6 +17,9 @@
     "react-router-dom": "^5.2.0",
     "react-scripts": "2.1.8"
   },
+  "engines": {
+    "npm": "7.16.0"
+  },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
