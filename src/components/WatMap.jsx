@@ -11,11 +11,13 @@ import 'leaflet/dist/leaflet.css';
 const defaultCenter = [52.25315880118569, 20.899343490600586];
 const defaultZoom = 16;
 
+//const URL = "https://wat-map-database.herokuapp.com"
+const URL = "http://localhost:8080"
+
 const markerIcon = L.icon({
   iconSize: [25, 41],
   iconAnchor: [10, 41],
   popupAnchor: [2, -40],
-  // specify the path here
   iconUrl: require("./marker-icon-red.png"),
   shadowUrl: require("./marker-shadow.png"),
 });
@@ -24,7 +26,6 @@ const entranceIcon = L.icon({
   iconSize: [25, 41],
   iconAnchor: [10, 41],
   popupAnchor: [2, -40],
-  // specify the path here
   iconUrl: require("./marker-icon.png"),
   shadowUrl: require("./marker-shadow.png"),
 });
@@ -51,8 +52,8 @@ function WatMap() {
           });
           if (map) {
 
-            console.log('https://wat-map-database.herokuapp.com/faculties/short/' + feature.properties.Wydzial)
-            axios.get('https://wat-map-database.herokuapp.com/faculties/short/' + feature.properties.Wydzial)
+            console.log(URL + '/faculties/short/' + feature.properties.Wydzial)
+            axios.get(URL + '/faculties/short/' + feature.properties.Wydzial)
             .then(res=>{
                   state.faculty = res.data
                   layerPopup = L.popup();
@@ -106,8 +107,17 @@ function WatMap() {
       var layerEntrances = L.layerGroup().addTo(map);
       function handleEntrances() {
         if (this.checked) {
-          L.marker([52.25314070439501, 20.87948585041667], {icon: entranceIcon}).addTo(layerEntrances)
-          layerEntrances.addTo(map)
+          axios.get(URL + '/faculties/short/entrances').then(res=>{
+            if (res.status === 200) {
+              console.log(res.data)
+              res.data.institutes.forEach(element => {
+                var marker = L.marker([element.latitude, element.longitude], {icon: entranceIcon})
+                marker.bindPopup(element.name).openPopup()
+                marker.addTo(layerEntrances)
+              });
+              layerEntrances.addTo(map)
+            }
+          })
         } else {
           layerEntrances.clearLayers()
         }
@@ -116,7 +126,9 @@ function WatMap() {
       var layerFood = L.layerGroup().addTo(map);
       function handleFood() {
         if (this.checked) {
-          L.marker([52.25314070439501, 20.87948585041667], {icon: markerIcon}).addTo(layerFood)
+          var marker = L.marker([52.25314070439501, 20.87948585041667], {icon: markerIcon})
+          marker.bindPopup().openPopup()
+          marker.addTo(layerFood)
           layerFood.addTo(map)
         } else {
           layerFood.clearLayers()

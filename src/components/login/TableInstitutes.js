@@ -6,8 +6,8 @@ import paginationFactory from 'react-bootstrap-table2-paginator';
 import cellEditFactory from 'react-bootstrap-table2-editor';
 import axios from 'axios';
 
-const URL = 'https://wat-map-database.herokuapp.com';
-//const URL = 'http://localhost:8080';
+//const URL = 'https://wat-map-database.herokuapp.com';
+const URL = 'http://localhost:8080';
 
 class TableInstitutes extends Component {
   state = {
