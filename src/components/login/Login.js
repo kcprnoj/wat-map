@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Row, FormGroup, FormControl, Button, HelpBlock } from 'react-bootstrap';
 import {isEmpty, isLength, isContainWhiteSpace } from './validator';
 import './login.css'
+import TableFaculties from './TableFaculties'
 import axios from 'axios';
 
 class Login extends Component {
@@ -72,7 +73,7 @@ class Login extends Component {
         let errors = this.validateLoginForm();
 
         if(errors === true) {
-            axios.post('http://localhost/admin/', {'login' : formData.login, 'password' : formData.password}).then(resp => {
+            axios.post('https://wat-map-database.herokuapp.com/admin/', {'login' : formData.login, 'password' : formData.password}).then(resp => {
                 if (resp.status === 200) {
                     this.setState({
                         errors: errors,
@@ -123,8 +124,8 @@ class Login extends Component {
             )
         } else {
             return(
-                <div className="Table">
-                    <h1>Logged in</h1>
+                <div className="TableFaculties">
+                    <TableFaculties/>
                 </div>
             )
         }
