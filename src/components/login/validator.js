@@ -63,7 +63,7 @@ export const isLength = (str, options) => {
         // Convert to string incase it's number
         let len = 0;
 
-        if (options.trim) {
+        if(options.trim){
             len = str.toString().trim().length;
         } else {
             len = str.toString().length;
@@ -90,7 +90,7 @@ export const isLength = (str, options) => {
  */
 export const isContainWhiteSpace = (str) => {
 
-    if (typeof str === 'string' || typeof str === 'number') {
+    if(typeof str === 'string' || typeof str === 'number'){
         return str.toString().trim().indexOf(' ') !== -1;
     } else {
         return false;
