@@ -11,8 +11,8 @@ import 'leaflet/dist/leaflet.css';
 const defaultCenter = [52.25315880118569, 20.899343490600586];
 const defaultZoom = 16;
 
-//const URL = "https://wat-map-database.herokuapp.com"
-const URL = "http://localhost:8080"
+const URL = "https://wat-map-database.herokuapp.com"
+//const URL = "http://localhost:8080"
 
 const markerIcon = L.icon({
   iconSize: [25, 41],
