@@ -6,36 +6,41 @@ import paginationFactory from 'react-bootstrap-table2-paginator';
 import cellEditFactory from 'react-bootstrap-table2-editor';
 import axios from 'axios';
 
-const URL = 'https://wat-map-database.herokuapp.com';
-//const URL = 'http://localhost:8080';
+//const URL = 'https://wat-map-database.herokuapp.com';
+const URL = 'http://localhost:8080';
 
-class TableFaculties extends Component {
+class TableInstitutes extends Component {
   state = {
-    faculties: [],
+    institutes: [],
     columns: [{
       dataField: 'id',
-      text: 'Faculty ID',
+      text: 'Institute ID',
       sort: true
     },
     {
       dataField: 'name',
-      text: 'Faculty Name',
+      text: 'Institute Name',
       sort: true,
       filter: textFilter()
     },
     {
-      dataField: 'shortName',
-      text: 'Abbreviation',
-      sort: true
-    },
-    {
       dataField: 'description',
-      text: 'Faculty description',
+      text: 'description',
       sort: true
     },
     {
-      dataField: 'url',
-      text: 'Faculty webpage',
+      dataField: 'latitude',
+      text: 'latitude',
+      sort: true
+    },
+    {
+      dataField: 'longitude',
+      text: 'longitude',
+      sort: true
+    },
+    {
+      dataField: 'facultyId',
+      text: 'faculty ID',
       sort: true
     },
     {
@@ -56,45 +61,47 @@ class TableFaculties extends Component {
 
   handleDelete = (rowId, name) => {
     console.log(rowId);
-    axios.delete(URL + '/faculties/' + rowId)
+    axios.delete(URL + '/institutes/' + rowId)
     .then(response => {
       console.log(response.data)
-      this.updateFaculties()
+      this.updateInstitutes()
     });
   };
 
   componentDidMount() {
-    this.updateFaculties();
+    this.updateInstitutes();
   }
 
-  updateFaculties() {
-    axios.get(URL + '/faculties/')
+  updateInstitutes() {
+    axios.get(URL + '/institutes/')
     .then(response => {
       this.setState({
-        faculties: response.data
+        institutes: response.data
       });
     });
   }
 
 
   onClick(e) {
-    var newFacy=
+    var newIns=
       {
-        "description": "",
         "id": 0,
-        "institutes": [],
         "name": "NEW",
-        "shortName": "NEW" + (this.state.faculties.length+1),
-        "url": "NEW"
+        "description": "NEW",
+        "number": 1,
+        "latitude": 0.0,
+        "longitude": 0.0,
+        "facultyId": 3
       }
 
-      console.log(newFacy)
+      console.log(newIns)
 
-      axios.post(URL + '/faculties/', newFacy)
+      axios.post(URL + '/institutes/', newIns)
       .then(response => {
+        console.log('Response')
         console.log(response.data)
-        this.state.faculties.push(response.data)
-        this.updateFaculties()
+        this.state.institutes.push(response.data)
+        this.updateInstitutes()
       });
   }
 
@@ -105,14 +112,19 @@ class TableFaculties extends Component {
     var cellEditNew = cellEditFactory({
       mode: 'click',
       afterSaveCell: (oldValue, newValue, row, column) => {
-        console.log(row)
-        console.log(oldValue)
-        console.log(newValue)
         console.log(column)
-        axios.put(URL + '/faculties/' + row.id, row ).then(response => {
+        axios.put(URL + '/institutes/' + row.id, row ).then(response => {
           console.log(response.data)
-          this.updateFaculties();
+          this.updateInstitutes();
        })
+       
+        if (column.dataField === "facultyId") {
+          console.log(URL + '/faculties/' + row.facultyId + '/institutes/' + row.id + '/add')
+          axios.post(URL + '/faculties/' + row.facultyId + '/institutes/' + row.id + '/add').then(response => {
+            console.log(response.data)
+            this.updateInstitutes();
+         })
+        }
       }
     });
 
@@ -132,7 +144,7 @@ class TableFaculties extends Component {
         striped
         hover
         keyField={'id'} 
-        data={ this.state.faculties } 
+        data={ this.state.institutes } 
         columns={ this.state.columns }
         filter={ filterFactory() } 
         pagination={ paginationFactory() }
@@ -145,4 +157,4 @@ class TableFaculties extends Component {
   }
 }
 
-export default TableFaculties;
+export default TableInstitutes;

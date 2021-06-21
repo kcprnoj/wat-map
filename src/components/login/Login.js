@@ -3,6 +3,7 @@ import { Row, FormGroup, FormControl, Button, HelpBlock } from 'react-bootstrap'
 import {isEmpty, isLength, isContainWhiteSpace } from './validator';
 import './login.css'
 import TableFaculties from './TableFaculties'
+import TableInstitutes from './TableInstitutes'
 import axios from 'axios';
 
 class Login extends Component {
@@ -124,8 +125,13 @@ class Login extends Component {
             )
         } else {
             return(
-                <div className="TableFaculties">
+                <div className="Tables">
+                    <div className="TableFaculties">
                     <TableFaculties/>
+                    </div>
+                    <div className="TableInstituties">
+                    <TableInstitutes/>
+                    </div>
                 </div>
             )
         }

@@ -2,7 +2,7 @@ import './../App.css';
 import 'leaflet/dist/leaflet.css';
 import {watMap} from './jsonmap';
 import ReactLeafletSearch from "react-leaflet-search";
-import { Map, TileLayer} from 'react-leaflet';
+import { Map, TileLayer,Marker} from 'react-leaflet';
 import React, { useEffect, useRef } from 'react';
 import L from 'leaflet';
 import axios from 'axios';
@@ -13,6 +13,7 @@ const defaultZoom = 16;
 function WatMap() {
   const mapRef = useRef();
   var locationLatLng = null;
+  var markers = [[52.25314070439501, 20.89948585041667]]
 
   var state = {
     faculty:null
@@ -72,6 +73,29 @@ function WatMap() {
         }
 
       ).addTo(map);
+
+
+
+      var entrances = L.control({position: 'bottomleft'});
+
+      entrances.onAdd = function (map) {
+          var div = L.DomUtil.create('div', 'entrances');
+          div.innerHTML = '<form><input id="entrances" type="checkbox"/>Entrances <br> <input id="food" type="checkbox"/>Food</form>'; 
+          return div;
+      };
+
+      entrances.addTo(map);
+
+      function handleEntrances() {
+        alert("Clicked, checked = " + this.checked);
+        L.marker([52.25314070439501, 20.87948585041667]).addTo(map)
+      }
+
+      function handleFood() {
+        alert("Clicked, checked = " + this.checked);
+      }
+      document.getElementById ("food").addEventListener ("click", handleFood, false);
+      document.getElementById ("entrances").addEventListener ("click", handleEntrances, false);
 
     map.locate({
       setView: true,
@@ -153,6 +177,12 @@ function WatMap() {
         <TileLayer url="https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png" attribution="&copy; <a href=&quot;https://www.openstreetmap.org/copyright&quot;>OpenStreetMap</a> contributors" />
         <ReactLeafletSearch position="topleft" customProvider={customProvider} inputValue=" "
         inputPlaceholder="Enter building number"/>;
+
+        {markers.map((position, idx) => 
+          <Marker key={`marker-${idx}`} position={position}>
+          </Marker>
+        )}
+
       </Map>
     </div>
   );
