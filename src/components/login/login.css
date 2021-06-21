@@ -15,6 +15,10 @@
     border-bottom: 1px solid silver;
 }
 
-.email{
-    background-color: black;
+.input{
+    margin: 5px;
+}
+
+.singin{
+    margin:10px;
 }

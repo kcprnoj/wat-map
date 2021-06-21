@@ -61,20 +61,6 @@ function WatMap() {
           map.closePopup();
       });
     }
-/*
-    function onEachPoint(feature, layer) {
-      layer.on('mouseover', function (e) {
-        if (map) {
-          layerPopup = L.popup();
-          layerPopup.setLatLng(e.latlng)
-          layerPopup.setContent(feature.properties.name)
-          layerPopup.openOn(map);
-        }
-      });
-      layer.on('mouseout', function (e) {
-        map.closePopup();
-      });
-    }*/
 
     L.geoJson(watMap,
       {

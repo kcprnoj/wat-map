@@ -1,12 +1,18 @@
 import React, { Component } from "react";
 import { Row, FormGroup, FormControl, Button, HelpBlock } from 'react-bootstrap';
-import { isEmail, isEmpty, isLength, isContainWhiteSpace } from './validator';
+import {isEmpty, isLength, isContainWhiteSpace } from './validator';
 import './login.css'
+import axios from 'axios';
 
 class Login extends Component {
 
     componentDidMount(){
-        document.body.style.background = "royalblue";
+        document.body.style.background = "royalblue"
+        document.body.style.backgroundImage = "url('background.PNG')"
+        document.body.style.backgroundRepeat = "no-repeat"
+        document.body.style.backgroundAttachment = "fixed"
+        document.body.style.backgroundSize = "cover"
+
     }
 
     constructor(props) {
@@ -16,7 +22,8 @@ class Login extends Component {
             formData: {}, // Contains login form data
             errors: {}, // Contains login field errors
             formSubmitted: false, // Indicates submit status of login form
-            loading: false // Indicates in progress state of login form
+            loading: false, // Indicates in progress state of login form
+            logged: false
         }
     }
 
@@ -38,10 +45,8 @@ class Login extends Component {
         let errors = {};
         const { formData } = this.state;
 
-        if (isEmpty(formData.email)) {
-            errors.email = "Email can't be blank";
-        } else if (!isEmail(formData.email)) {
-            errors.email = "Please enter a valid email";
+        if (isEmpty(formData.login)) {
+            errors.login = "Login can't be blank";
         }
 
         if (isEmpty(formData.password)) {
@@ -62,46 +67,67 @@ class Login extends Component {
     login = (e) => {
 
         e.preventDefault();
+        const { formData } = this.state;
 
         let errors = this.validateLoginForm();
 
-        if(errors === true){
-            alert("You are successfully signed in...");
-            window.location.reload()
+        if(errors === true) {
+            axios.post('http://localhost/admin/', {'login' : formData.login, 'password' : formData.password}).then(resp => {
+                if (resp.status === 200) {
+                    this.setState({
+                        errors: errors,
+                        formSubmitted: true,
+                        logged: true
+                    });
+                } else {
+                    alert("wrong password!")
+                }
+            })
         } else {
             this.setState({
                 errors: errors,
-                formSubmitted: true
+                formSubmitted: true,
+                logged: false
             });
         }
     }
 
     render() {
 
-        const { errors, formSubmitted } = this.state;
 
-        return (
-            <div className="Login">
-                <Row>
-                    <form onSubmit={this.login}>
-                        <h1 className="title">Login</h1>
-                        <FormGroup controlId="email" validationState={ formSubmitted ? (errors.email ? 'error' : 'success') : null }>
-                            <FormControl type="text" name="email" placeholder="Enter your email" onChange={this.handleInputChange} />
-                        { errors.email &&
-                            <HelpBlock>{errors.email}</HelpBlock>
-                        }
-                        </FormGroup>
-                        <FormGroup controlId="password" validationState={ formSubmitted ? (errors.password ? 'error' : 'success') : null }>
-                            <FormControl type="password" name="password" placeholder="Enter your password" onChange={this.handleInputChange} />
-                        { errors.password &&
-                            <HelpBlock>{errors.password}</HelpBlock>
-                        }
-                        </FormGroup>
-                        <Button type="submit" bsStyle="primary">Sign-In</Button>
-                    </form>
-                </Row>
-            </div>
-        )
+        if(!this.state.logged)
+        {
+            const { errors, formSubmitted } = this.state;
+
+            return (
+                <div className="Login">
+                    <Row>
+                        <form onSubmit={this.login}>
+                            <h1 className="title">Login</h1>
+                            <FormGroup controlId="login" className="input" validationState={ formSubmitted ? (errors.login ? 'error' : 'success') : null }>
+                                <FormControl type="text" name="login" placeholder="Enter your login" onChange={this.handleInputChange} />
+                            { errors.login &&
+                                <HelpBlock>{errors.login}</HelpBlock>
+                            }
+                            </FormGroup>
+                            <FormGroup controlId="password" className="input" validationState={ formSubmitted ? (errors.password ? 'error' : 'success') : null }>
+                                <FormControl type="password" name="password" placeholder="Enter your password" onChange={this.handleInputChange} />
+                            { errors.password &&
+                                <HelpBlock>{errors.password}</HelpBlock>
+                            }
+                            </FormGroup>
+                            <Button type="submit" bsStyle="primary" className="singin">Sign-In</Button>
+                        </form>
+                    </Row>
+                </div>
+            )
+        } else {
+            return(
+                <div className="Table">
+                    <h1>Logged in</h1>
+                </div>
+            )
+        }
     }
 }
 
