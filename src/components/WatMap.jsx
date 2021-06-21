@@ -2,19 +2,36 @@ import './../App.css';
 import 'leaflet/dist/leaflet.css';
 import {watMap} from './jsonmap';
 import ReactLeafletSearch from "react-leaflet-search";
-import { Map, TileLayer,Marker} from 'react-leaflet';
+import { Map, TileLayer} from 'react-leaflet';
 import React, { useEffect, useRef } from 'react';
 import L from 'leaflet';
 import axios from 'axios';
+import 'leaflet/dist/leaflet.css';
 
 const defaultCenter = [52.25315880118569, 20.899343490600586];
 const defaultZoom = 16;
 
+const markerIcon = L.icon({
+  iconSize: [25, 41],
+  iconAnchor: [10, 41],
+  popupAnchor: [2, -40],
+  // specify the path here
+  iconUrl: require("./marker-icon-red.png"),
+  shadowUrl: require("./marker-shadow.png"),
+});
+
+const entranceIcon = L.icon({
+  iconSize: [25, 41],
+  iconAnchor: [10, 41],
+  popupAnchor: [2, -40],
+  // specify the path here
+  iconUrl: require("./marker-icon.png"),
+  shadowUrl: require("./marker-shadow.png"),
+});
+
 function WatMap() {
   const mapRef = useRef();
   var locationLatLng = null;
-  var markers = [[52.25314070439501, 20.89948585041667]]
-
   var state = {
     faculty:null
   }
@@ -86,14 +103,26 @@ function WatMap() {
 
       entrances.addTo(map);
 
+      var layerEntrances = L.layerGroup().addTo(map);
       function handleEntrances() {
-        alert("Clicked, checked = " + this.checked);
-        L.marker([52.25314070439501, 20.87948585041667]).addTo(map)
+        if (this.checked) {
+          L.marker([52.25314070439501, 20.87948585041667], {icon: entranceIcon}).addTo(layerEntrances)
+          layerEntrances.addTo(map)
+        } else {
+          layerEntrances.clearLayers()
+        }
       }
 
+      var layerFood = L.layerGroup().addTo(map);
       function handleFood() {
-        alert("Clicked, checked = " + this.checked);
+        if (this.checked) {
+          L.marker([52.25314070439501, 20.87948585041667], {icon: markerIcon}).addTo(layerFood)
+          layerFood.addTo(map)
+        } else {
+          layerFood.clearLayers()
+        }
       }
+
       document.getElementById ("food").addEventListener ("click", handleFood, false);
       document.getElementById ("entrances").addEventListener ("click", handleEntrances, false);
 
@@ -177,12 +206,6 @@ function WatMap() {
         <TileLayer url="https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png" attribution="&copy; <a href=&quot;https://www.openstreetmap.org/copyright&quot;>OpenStreetMap</a> contributors" />
         <ReactLeafletSearch position="topleft" customProvider={customProvider} inputValue=" "
         inputPlaceholder="Enter building number"/>;
-
-        {markers.map((position, idx) => 
-          <Marker key={`marker-${idx}`} position={position}>
-          </Marker>
-        )}
-
       </Map>
     </div>
   );

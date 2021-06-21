@@ -105,8 +105,6 @@ class TableInstitutes extends Component {
       });
   }
 
-  
-
   render() {
 
     var cellEditNew = cellEditFactory({
