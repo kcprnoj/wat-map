@@ -48,6 +48,7 @@ export const watMap = {
         "stroke-opacity": 1,
         "fill": "#0080ff",
         "fill-opacity": 0.5,
+        "Wydzial": "WLO",
         "number": 13
       },
       "geometry": {
@@ -1615,7 +1616,7 @@ export const watMap = {
         "stroke-opacity": 1,
         "fill": "#ff0080",
         "fill-opacity": 0.5,
-        "Wydzial": "IO",
+        "Wydzial": "IOE",
         "number": 41
       },
       "geometry": {

@@ -1,24 +1,22 @@
 import './../App.css';
 import 'leaflet/dist/leaflet.css';
-import {watMap, watPoints} from './jsonmap';
+import {watMap} from './jsonmap';
 import ReactLeafletSearch from "react-leaflet-search";
 import { Map, TileLayer} from 'react-leaflet';
 import React, { useEffect, useRef } from 'react';
 import L from 'leaflet';
+import axios from 'axios';
 
 const defaultCenter = [52.25315880118569, 20.899343490600586];
 const defaultZoom = 16;
 
-const markerIcon = L.icon({
-  iconUrl: 'marker.png',
-  iconSize: [32, 37],
-  iconAnchor: [16, 37],
-  popupAnchor: [0, -28]
-});
-
 function WatMap() {
   const mapRef = useRef();
   var locationLatLng = null;
+
+  var state = {
+    faculty:null
+  }
 
   useEffect(() => {
     const { current = {} } = mapRef;
@@ -34,10 +32,26 @@ function WatMap() {
               fillOpacity: 0.9
           });
           if (map) {
-            layerPopup = L.popup();
-            layerPopup.setLatLng(e.latlng)
-            layerPopup.setContent('Building number '+feature.properties.number)
-            layerPopup.openOn(map);
+
+            console.log('https://wat-map-database.herokuapp.com/faculties/short/' + feature.properties.Wydzial)
+            axios.get('https://wat-map-database.herokuapp.com/faculties/short/' + feature.properties.Wydzial)
+            .then(res=>{
+                  state.faculty = res.data
+                  layerPopup = L.popup();
+                  layerPopup.setLatLng(e.latlng)
+                  console.log(state.faculty);
+                  if(state.faculty !== null) {
+                    var content = ""
+                    if (feature.properties.number !== 0) {
+                      content += '<b>Building number : </b>'+ feature.properties.number + "<br>"
+                    }
+                    content += '<b>Faculty : </b>' + state.faculty.name + "<br>"
+                    content += '<b>Webpage : </b>' + state.faculty.url
+                    layerPopup.setContent(content)
+                  }
+                  layerPopup.openOn(map);
+            })
+            .catch(err=>console.log(err))
           }
       });
       layer.on('mouseout', function (e) {
@@ -47,7 +61,7 @@ function WatMap() {
           map.closePopup();
       });
     }
-
+/*
     function onEachPoint(feature, layer) {
       layer.on('mouseover', function (e) {
         if (map) {
@@ -60,7 +74,7 @@ function WatMap() {
       layer.on('mouseout', function (e) {
         map.closePopup();
       });
-    }
+    }*/
 
     L.geoJson(watMap,
       {
@@ -72,15 +86,6 @@ function WatMap() {
         }
 
       ).addTo(map);
-
-      L.geoJson(watPoints,
-        {
-          pointToLayer: function (feature, latlng) {
-            return L.marker(latlng, {icon: markerIcon});
-          }, onEachFeature: onEachPoint
-          }
-  
-        )//.addTo(map);
 
     map.locate({
       setView: true,
