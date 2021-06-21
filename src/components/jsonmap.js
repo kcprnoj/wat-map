@@ -1133,7 +1133,7 @@ export const watMap = {
         "stroke-opacity": 1,
         "fill": "#c0c0c0",
         "fill-opacity": 0.5,
-        "Wydzial": "Other",
+        "Wydzial": "other",
         "number": 35
       },
       "geometry": {
