@@ -14,21 +14,51 @@ const defaultZoom = 16;
 const URL = "https://wat-map-database.herokuapp.com"
 //const URL = "http://localhost:8080"
 
-const markerIcon = L.icon({
-  iconSize: [25, 41],
-  iconAnchor: [10, 41],
-  popupAnchor: [2, -40],
-  iconUrl: require("./marker-icon-red.png"),
-  shadowUrl: require("./marker-shadow.png"),
+const entranceIcon = L.icon({
+  iconSize: [30, 30],
+  iconAnchor: [15, 15],
+  popupAnchor: [0, 0],
+  iconUrl: require("./images/entrance.png"),
 });
 
-const entranceIcon = L.icon({
-  iconSize: [25, 41],
-  iconAnchor: [10, 41],
-  popupAnchor: [2, -40],
-  iconUrl: require("./marker-icon.png"),
-  shadowUrl: require("./marker-shadow.png"),
+const foodIcon = L.icon({
+  iconSize: [30, 30],
+  iconAnchor: [15, 15],
+  popupAnchor: [0, 0],
+  iconUrl: require("./images/food.png"),
 });
+
+const elevatorIcon = L.icon({
+  iconSize: [30, 30],
+  iconAnchor: [15, 15],
+  popupAnchor: [0, 0],
+  iconUrl: require("./images/elevator.png"),
+});
+
+const shopIcon = L.icon({
+  iconSize: [30, 30],
+  iconAnchor: [15, 15],
+  popupAnchor: [0, 0],
+  iconUrl: require("./images/shop.png"),
+});
+
+function showMarkers(layer, checked, url, map, icon) {
+  if (checked) {
+    axios.get(URL + '/faculties/short/' + url).then(res=>{
+      if (res.status === 200) {
+        console.log(res.data)
+        res.data.institutes.forEach(element => {
+          var marker = L.marker([element.latitude, element.longitude], {icon: icon})
+          marker.bindPopup(element.name).openPopup()
+          marker.addTo(layer)
+        });
+        layer.addTo(map)
+      }
+    })
+  } else {
+    layer.clearLayers()
+  }
+}
 
 function WatMap() {
   const mapRef = useRef();
@@ -92,50 +122,42 @@ function WatMap() {
 
       ).addTo(map);
 
-
-
       var entrances = L.control({position: 'bottomleft'});
 
       entrances.onAdd = function (map) {
-          var div = L.DomUtil.create('div', 'entrances');
-          div.innerHTML = '<form><input id="entrances" type="checkbox"/>Entrances <br> <input id="food" type="checkbox"/>Food</form>'; 
+          var div = L.DomUtil.create('div', 'entrances')
+          div.innerHTML = '<form><input id="entrances" type="checkbox"/> Entrances <br>'
+          div.innerHTML += '<input id="food" type="checkbox"/> Food</form> <br>'
+          div.innerHTML += '<input id="elevators" type="checkbox"/> Elevators</form> <br>'
+          div.innerHTML += '<input id="shops" type="checkbox"/> Shops</form> <br>'
           return div;
       };
 
       entrances.addTo(map);
 
-      var layerEntrances = L.layerGroup().addTo(map);
+      var layerEntrances = L.layerGroup();
       function handleEntrances() {
-        if (this.checked) {
-          axios.get(URL + '/faculties/short/entrances').then(res=>{
-            if (res.status === 200) {
-              console.log(res.data)
-              res.data.institutes.forEach(element => {
-                var marker = L.marker([element.latitude, element.longitude], {icon: entranceIcon})
-                marker.bindPopup(element.name).openPopup()
-                marker.addTo(layerEntrances)
-              });
-              layerEntrances.addTo(map)
-            }
-          })
-        } else {
-          layerEntrances.clearLayers()
-        }
+        showMarkers(layerEntrances, this.checked, 'entrances', map, entranceIcon)
       }
 
-      var layerFood = L.layerGroup().addTo(map);
+      var layerFood = L.layerGroup();
       function handleFood() {
-        if (this.checked) {
-          var marker = L.marker([52.25314070439501, 20.87948585041667], {icon: markerIcon})
-          marker.bindPopup().openPopup()
-          marker.addTo(layerFood)
-          layerFood.addTo(map)
-        } else {
-          layerFood.clearLayers()
-        }
+        showMarkers(layerFood, this.checked, 'food', map , foodIcon)
+      }
+
+      var layerShops = L.layerGroup();
+      function handleShops() {
+        showMarkers(layerShops, this.checked, 'shops', map , shopIcon)
+      }
+
+      var layerElevators = L.layerGroup();
+      function handleElevators() {
+        showMarkers(layerElevators, this.checked, 'elevators', map , elevatorIcon)
       }
 
       document.getElementById ("food").addEventListener ("click", handleFood, false);
+      document.getElementById ("shops").addEventListener ("click", handleShops, false);
+      document.getElementById ("elevators").addEventListener ("click", handleElevators, false);
       document.getElementById ("entrances").addEventListener ("click", handleEntrances, false);
 
     map.locate({
@@ -188,7 +210,6 @@ function WatMap() {
       });
       if (map) {
         var layerPopup = L.popup();
-        layerPopup.setLatLng(e.latlng)
         layerPopup.setContent('You are here')
         layerPopup.openOn(map);
       }
