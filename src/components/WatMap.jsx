@@ -210,6 +210,7 @@ function WatMap() {
       });
       if (map) {
         var layerPopup = L.popup();
+        layerPopup.setLatLng(e.latlng)
         layerPopup.setContent('You are here')
         layerPopup.openOn(map);
       }
