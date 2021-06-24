@@ -81,10 +81,11 @@ class Login extends Component {
                         formSubmitted: true,
                         logged: true
                     });
-                } else {
-                    alert("wrong password!")
                 }
-            })
+            }).catch( error =>{
+                alert("Wrong credentials")
+            }
+            )
         } else {
             this.setState({
                 errors: errors,

@@ -44,7 +44,13 @@ class TableInstitutes extends Component {
       sort: true
     },
     {
+      dataField: 'number',
+      text: 'Number',
+      sort: true
+    },
+    {
       dataField: "remove",
+      editable: false,
       text: "Delete",
       formatter: (cellContent, row) => {
         return (

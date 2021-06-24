@@ -42,6 +42,13 @@ const shopIcon = L.icon({
   iconUrl: require("./images/shop.png"),
 });
 
+const deanIcon = L.icon({
+  iconSize: [30, 30],
+  iconAnchor: [15, 15],
+  popupAnchor: [0, 0],
+  iconUrl: require("./images/star.png"),
+});
+
 function showMarkers(layer, checked, url, map, icon) {
   if (checked) {
     axios.get(URL + '/faculties/short/' + url).then(res=>{
@@ -72,6 +79,7 @@ function WatMap() {
     const { leafletElement: map } = current;
 
     var layerPopup;
+    var layerDziekanat = L.layerGroup();
     function foreachfeature(feature, layer) {
       layer.setStyle({
         color: feature.properties.fill
@@ -81,33 +89,47 @@ function WatMap() {
               fillOpacity: 0.9
           });
           if (map) {
-
             console.log(URL + '/faculties/short/' + feature.properties.Wydzial)
             axios.get(URL + '/faculties/short/' + feature.properties.Wydzial)
             .then(res=>{
-                  state.faculty = res.data
-                  layerPopup = L.popup();
-                  layerPopup.setLatLng(e.latlng)
-                  console.log(state.faculty);
-                  if(state.faculty !== null) {
-                    var content = ""
-                    if (feature.properties.number !== 0) {
-                      content += '<b>Building number : </b>'+ feature.properties.number + "<br>"
-                    }
-                    content += '<b>Faculty : </b>' + state.faculty.name + "<br>"
-                    content += '<b>Webpage : </b>' + state.faculty.url
-                    layerPopup.setContent(content)
-                  }
-                  layerPopup.openOn(map);
+              state.faculty = res.data
+              layerPopup = L.popup();
+              layerPopup.setLatLng(e.latlng)
+              console.log(state.faculty);
+              if(state.faculty !== null) {
+                var content = ""
+                if (feature.properties.number !== 0) {
+                  content += '<b>Building number : </b>'+ feature.properties.number + "<br>"
+                }
+                content += '<b>Faculty : </b>' + state.faculty.name + "<br>"
+                content += '<b>Webpage : </b>' + state.faculty.url
+                layerPopup.setContent(content)
+              }
+              layerPopup.openOn(map);
             })
             .catch(err=>console.log(err))
           }
       });
       layer.on('mouseout', function (e) {
-          layer.setStyle({
-              fillOpacity: 0.4
-          });
-          map.closePopup();
+        layer.setStyle({
+            fillOpacity: 0.4
+        });
+        map.closePopup();
+      });
+
+      layer.on('click', function (e) {
+        layerDziekanat.clearLayers()
+        if (state.faculty === null)
+          return
+        console.log(state.faculty)
+        state.faculty.institutes.forEach(element => {
+          if (element.name === "dziekanat") {
+            var marker = L.marker([element.latitude, element.longitude], {icon: deanIcon})
+            marker.bindPopup('<b>Dean\'s office</b> <br> Room: ' + element.number + '<br>' + element.description).openPopup()
+            marker.addTo(layerDziekanat)
+            layerDziekanat.addTo(map)
+          }
+        });
       });
     }
 

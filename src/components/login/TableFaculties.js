@@ -41,6 +41,7 @@ class TableFaculties extends Component {
     {
       dataField: "remove",
       text: "Delete",
+      editable: false,
       formatter: (cellContent, row) => {
         return (
           <button
@@ -131,7 +132,7 @@ class TableFaculties extends Component {
         <BootstrapTable
         striped
         hover
-        keyField={'id'} 
+        keyField={'id'}
         data={ this.state.faculties } 
         columns={ this.state.columns }
         filter={ filterFactory() } 
